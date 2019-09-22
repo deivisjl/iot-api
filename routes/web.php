@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home/my-tokens', 'HomeController@getTokens')->name('personal-tokens');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+
