@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-md-8">
-        	<passport-personal-access-tokens></passport-personal-access-tokens>
+        	<passport-authorized-clients></passport-authorized-clients>
         </div>
     </div>
 </div>

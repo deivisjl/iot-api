@@ -21,8 +21,8 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -34,7 +34,9 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         @if(Auth::check())
-                            <li><a href="{{ route('personal-tokens')}}">My Tokens</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="{{route('personal-tokens')}}">My Tokens</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="{{route('personal-clients')}}">My Clients</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="{{route('authorized-clients')}}">Authorized Clients</a></li>
                         @endif
                     </ul>
 
@@ -51,7 +53,7 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown active">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
