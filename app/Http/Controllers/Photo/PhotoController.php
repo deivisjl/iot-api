@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Photo;
 
 use Illuminate\Http\Request;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Database;
+use Kreait\Firebase\ServiceAccount;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
 
@@ -19,7 +22,22 @@ class PhotoController extends ApiController
      */
     public function index()
     {
-        return $this->showMessage('Hello world from api Passport');
+        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/../simpleblog-e736b-57834e980fb9.json');
+        $firebase = (new Factory)
+            ->withServiceAccount($serviceAccount)
+            ->withDatabaseUri('https://simpleblog-e736b.firebaseio.com/')
+            ->create();
+
+        $database = $firebase->getDatabase();
+
+        $newPost = $database
+                    ->getReference('blog/posts')
+                    ->push([
+                        'title' => 'Mi segundo post',
+                        'body' => 'Descripción del segundo post'
+                    ]);
+
+        return $this->showMessage($newPost->getvalue());
     }
 
     /**
