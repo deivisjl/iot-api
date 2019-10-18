@@ -31,7 +31,7 @@ class AlarmaController extends ApiController
                         'Humedad' => $request->humedad,
                         'Fecha' => Carbon::now()->format('d-m-Y'),
                         'Hora' => Carbon::now()->format('H:i:s a'),
-                        'Estado' => 1
+                        'Estado' => 0
                         );
 
         $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/../simpleblog-e736b-57834e980fb9.json');
