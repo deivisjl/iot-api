@@ -19,3 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('photos','Photo\PhotoController');
 Route::get('/temperatura/{request}','Alarma\AlarmaController@temperatura');
+Route::get('/gas','Alarma\AlarmaController@gas');
+Route::get('/proximidad','Alarma\AlarmaController@proximidad');
+Route::get('/panico','Alarma\AlarmaController@panico');
