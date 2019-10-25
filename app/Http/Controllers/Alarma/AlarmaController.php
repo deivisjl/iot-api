@@ -26,7 +26,21 @@ class AlarmaController extends ApiController
 
     public function temperatura(Request $request)
     {        
-        $datos = (object) array(
+
+        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/../simpleblog-e736b-57834e980fb9.json');
+
+            $firebase = (new Factory)
+                ->withServiceAccount($serviceAccount)
+                ->withDatabaseUri('https://simpleblog-e736b.firebaseio.com/')
+                ->create();
+            $database = $firebase->getDatabase();
+
+            $id = $database
+                        ->getReference(self::ALERT_PATH.'/'.self::TEMPERATURE_PATH)
+                        ->push()->getKey();
+
+            $datos = (object) array(
+                        'Id' => $id,
                         'Temperatura' => $request->temperatura,
                         'Humedad' => $request->humedad,
                         'Fecha' => Carbon::now()->format('d-m-Y'),
@@ -34,17 +48,10 @@ class AlarmaController extends ApiController
                         'Estado' => 0
                         );
 
-        $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/../simpleblog-e736b-57834e980fb9.json');
-
-            $firebase = (new Factory)
-                ->withServiceAccount($serviceAccount)
-                ->withDatabaseUri('https://simpleblog-e736b.firebaseio.com/')
-                ->create();
-            $database = $firebase->getDatabase();
-
             $newTemperatura = $database
-                        ->getReference(self::ALERT_PATH.'/'.self::TEMPERATURE_PATH)
-                        ->push($datos);
+                                ->getReference(self::ALERT_PATH.'/'.self::TEMPERATURE_PATH)
+                                ->getChild($id)->set($datos);
+
         return $this->showMessage($newTemperatura->getvalue());
     }
 
@@ -52,13 +59,6 @@ class AlarmaController extends ApiController
 
     public function gas()
     {
-         $datos = (object) array(
-                        'Mensaje' => 'Presencia de gas detectada',
-                        'Fecha' => Carbon::now()->format('d-m-Y'),
-                        'Hora' => Carbon::now()->format('H:i:s a'),
-                        'Estado' => 0
-                        );
-
         $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/../simpleblog-e736b-57834e980fb9.json');
 
             $firebase = (new Factory)
@@ -67,10 +67,23 @@ class AlarmaController extends ApiController
                 ->create();
             $database = $firebase->getDatabase();
 
-            $newTemperatura = $database
+            $id = $database
                         ->getReference(self::ALERT_PATH.'/'.self::SMOCK_PATH)
-                        ->push($datos);
-        return $this->showMessage($newTemperatura->getvalue());
+                        ->push()->getKey();
+
+            $datos = (object) array(
+                        'Id' => $id,
+                        'Mensaje' => 'Presencia de gas detectada',
+                        'Fecha' => Carbon::now()->format('d-m-Y'),
+                        'Hora' => Carbon::now()->format('H:i:s a'),
+                        'Estado' => 0
+                        );
+
+            $newGas = $database
+                                ->getReference(self::ALERT_PATH.'/'.self::SMOCK_PATH)
+                                ->getChild($id)->set($datos);
+
+        return $this->showMessage($newGas->getvalue());
     }
 
     public function proximidad()
@@ -91,21 +104,28 @@ class AlarmaController extends ApiController
                 ->create();
             $database = $firebase->getDatabase();
 
-            $newTemperatura = $database
+            $id = $database
                         ->getReference(self::ALERT_PATH.'/'.self::INTRUDER_PATH)
-                        ->push($datos);
-        return $this->showMessage($newTemperatura->getvalue());
-    }
+                        ->push()->getKey();
 
-    public function panico()
-    {
-        $datos = (object) array(
-                        'Titulo' => 'Alarma de pánico',
-                        'Mensaje' => 'Se ha activado manualmente la alarma audible',
+            $datos = (object) array(
+                        'Id' => $id,
+                        'Titulo' => 'Intrusión inusual',
+                        'Mensaje' => 'Se ha detectado un ingreso inusual dentro de la casa',
                         'Fecha' => Carbon::now()->format('d-m-Y'),
                         'Hora' => Carbon::now()->format('H:i:s a'),
                         'Estado' => 0
                         );
+
+            $newProximidad = $database
+                                ->getReference(self::ALERT_PATH.'/'.self::INTRUDER_PATH)
+                                ->getChild($id)->set($datos);
+
+        return $this->showMessage($newProximidad->getvalue());
+    }
+
+    public function panico()
+    {
 
         $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/../simpleblog-e736b-57834e980fb9.json');
 
@@ -115,10 +135,24 @@ class AlarmaController extends ApiController
                 ->create();
             $database = $firebase->getDatabase();
 
-            $newTemperatura = $database
+            $id = $database
                         ->getReference(self::ALERT_PATH.'/'.self::PANIC_PATH)
-                        ->push($datos);
-        return $this->showMessage($newTemperatura->getvalue());
+                        ->push()->getKey();
+
+            $datos = (object) array(
+                        'Id' => $id,
+                        'Titulo' => 'Alarma de pánico',
+                        'Mensaje' => 'Se ha activado manualmente la alarma audible',
+                        'Fecha' => Carbon::now()->format('d-m-Y'),
+                        'Hora' => Carbon::now()->format('H:i:s a'),
+                        'Estado' => 0
+                        );
+
+            $newPanico = $database
+                                ->getReference(self::ALERT_PATH.'/'.self::PANIC_PATH)
+                                ->getChild($id)->set($datos);
+
+        return $this->showMessage($newPanico->getvalue());
     }
 
 }
